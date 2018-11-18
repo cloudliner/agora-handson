@@ -9,10 +9,20 @@
 </head>
 <body>
 <div id="log"></div>
+<button onclick="leave();">leave</button>
 <div id="local_video" style="width: 320px; height: 240px;"></div>
 <div id="agora_remote" style="width: 320px;"></div>
 <script language="javascript">
   var client, localStream;
+  function leave() {
+    client.leave(function() {
+      if (localStream) {
+        localStream.stop();
+      }
+    }, function(err) {
+      console.log(`-- client.leave: ${err}`);
+    });
+  }
   client = AgoraRTC.createClient({mode: 'live', codec:'vp8'});
   client.on('stream-added', function(evt) {
     var stream = evt.stream;
