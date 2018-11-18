@@ -24,6 +24,13 @@
     });
   }
   client = AgoraRTC.createClient({mode: 'live', codec:'vp8'});
+  client.on('peer-leave', function(evt) {
+    var stream = evt.stream;
+    if (stream) {
+      stream.stop();
+      $(`agora_remote${stream.getId()}`).remove();
+    }
+  });
   client.on('stream-added', function(evt) {
     var stream = evt.stream;
     client.subscribe(stream, function(err) {
