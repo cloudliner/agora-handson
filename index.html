@@ -13,6 +13,10 @@
 <div id="local_video" style="width: 320px; height: 240px;"></div>
 <div id="agora_remote" style="width: 320px;"></div>
 <script language="javascript">
+  console.log(`AgoraRTC.checkSystemRequirements(): ${AgoraRTC.checkSystemRequirements()}`);
+  AgoraRTC.getDevices(function(devices) {
+    console.log(`AgoraRTC.getDevices(): ${devices}`);
+  });
   var client, localStream;
   function leave() {
     client.leave(function() {
@@ -24,6 +28,7 @@
     });
   }
   client = AgoraRTC.createClient({mode: 'live', codec:'vp8'});
+  client.enableAudioVolumeIndicator();
   client.on('peer-leave', function(evt) {
     var stream = evt.stream;
     if (stream) {
@@ -47,8 +52,8 @@
     client.join("", "demo", "test.cloudliner.jp", function(uid) {
       // console.log("-- client.join --"); 
       $("#log").html("connected");
-      localStream = AgoraRTC.createStream({ streamId: uid, audio: true, video: true, screen: true, mediaSource: "window"});
-      // localStream = AgoraRTC.createStream({ streamId: uid, audio: true, video: true, screen: false});
+      // localStream = AgoraRTC.createStream({ streamId: uid, audio: true, video: true, screen: true, mediaSource: "window"});
+      localStream = AgoraRTC.createStream({ streamId: uid, audio: true, video: true, screen: false});
       localStream.init(function() {
         // console.log("-- localStream.init --");
         localStream.play("local_video");
