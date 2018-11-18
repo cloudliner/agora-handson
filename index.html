@@ -10,13 +10,25 @@
 <body>
 <div id="log"></div>
 <script language="javascript">
-  var client, localstream;
+  var client, localStream;
   client = AgoraRTC.createClient({mode: 'live', codec:'h264'});
   client.init(app_id, function() {
+    console.log("-- client.init --"); 
     client.join("", "demo", "test.cloudliner.jp", function(uid) {
+      console.log("-- client.join --"); 
       $("#log").html("connected");
-    }, function(err) {});
-  }, function(err) {})
+      localStream = AgoraRTC.createStream({ streamId: uid, audio: true, video: true, screen: false});
+      localStream.init(function() {
+        console.log("-- localStream.init --"); 
+      }, function(err) {
+        console.log(`-- localStream.init: ${err}`);
+      });
+    }, function(err) {
+      console.log(`-- client.join: ${err}`);
+    });
+  }, function(err) {
+    console.log(`-- client.init: ${err}`);
+  })
 </script>
 </body>
 </html>
