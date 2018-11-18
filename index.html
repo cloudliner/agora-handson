@@ -10,9 +10,21 @@
 <body>
 <div id="log"></div>
 <div id="local_video" style="width: 320px; height: 240px;"></div>
+<div id="agora_remote" style="width: 320px;"></div>
 <script language="javascript">
   var client, localStream;
-  client = AgoraRTC.createClient({mode: 'live', codec:'h264'});
+  client = AgoraRTC.createClient({mode: 'live', codec:'vp8'});
+  client.on('stream-added', function(evt) {
+    var stream = evt.stream;
+    client.subscribe(stream, function(err) {
+      console.log(`-- client.subscribe: ${err}`);
+    });
+  });
+  client.on('stream-subscribed', function(evt) {
+    var stream = evt.stream;
+    $('div#agora_remote').append(`<div id="agora_remote${stream.getId()}" style="width: 320px; height:240px;"></div>`);
+    stream.play(`agora_remote${stream.getId()}`);
+  });
   client.init(app_id, function() {
     // console.log("-- client.init --"); 
     client.join("", "demo", "test.cloudliner.jp", function(uid) {
@@ -22,6 +34,9 @@
       localStream.init(function() {
         // console.log("-- localStream.init --");
         localStream.play("local_video");
+        client.publish(localStream, function(err) {
+          console.log(`-- client.publish: ${err}`);
+        })
       }, function(err) {
         // console.log(`-- localStream.init: ${err}`);
       });
