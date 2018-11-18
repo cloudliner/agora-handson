@@ -47,7 +47,8 @@
     client.join("", "demo", "test.cloudliner.jp", function(uid) {
       // console.log("-- client.join --"); 
       $("#log").html("connected");
-      localStream = AgoraRTC.createStream({ streamId: uid, audio: true, video: true, screen: false});
+      localStream = AgoraRTC.createStream({ streamId: uid, audio: true, video: true, screen: true, mediaSource: "window"});
+      // localStream = AgoraRTC.createStream({ streamId: uid, audio: true, video: true, screen: false});
       localStream.init(function() {
         // console.log("-- localStream.init --");
         localStream.play("local_video");
